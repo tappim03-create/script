@@ -1,83 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8"/>
-  <title>Get Your Roblox Key</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; text-align:center; }
-    .card { border:1px solid #ddd; padding:20px; border-radius:10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-    .key-box { font-family: monospace; font-size:28px; padding:12px 18px; border:2px dashed #333; display:inline-block; margin:16px 0; border-radius:6px; }
-    button { padding:10px 16px; font-size:16px; cursor:pointer; border-radius:6px; }
-    #expires { color: #555; margin-top:8px; }
-  </style>
+<meta charset="utf-8"/>
+<title>Daily Key</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial, sans-serif; text-align:center; margin:40px; }
+.key-box { font-family: monospace; font-size:28px; padding:10px 20px; border:2px dashed #333; margin:20px 0; display:inline-block; }
+button { padding:10px 20px; font-size:16px; cursor:pointer; }
+</style>
 </head>
 <body>
-  <div class="card">
-    <h1>รับคีย์สำหรับ Roblox</h1>
-    <p id="desc">กดปุ่มด้านล่างเพื่อคัดลอกคีย์ประจำวัน (คีย์จะเปลี่ยนทุก 24 ชั่วโมง)</p>
-
-    <div id="keyWrap" style="display:none">
-      <div class="key-box" id="theKey">—</div><br>
-      <button id="copyBtn">Copy Key</button>
-      <p id="status" style="color:green;margin-top:10px"></p>
-      <p id="expires"></p>
-    </div>
-
-    <p id="loading">กำลังโหลดคีย์...</p>
-  </div>
+<h1>Get Your Daily Key</h1>
+<div id="keyWrap">
+  <div class="key-box" id="key">Loading...</div><br>
+  <button id="copyBtn">Copy Key</button>
+  <p id="status" style="color:green"></p>
+</div>
 
 <script>
-  const theKeyEl = document.getElementById('theKey');
-  const copyBtn = document.getElementById('copyBtn');
-  const statusEl = document.getElementById('status');
-  const expiresEl = document.getElementById('expires');
-  const loadingEl = document.getElementById('loading');
-  const keyWrap = document.getElementById('keyWrap');
+const keyEl = document.getElementById('key');
+const copyBtn = document.getElementById('copyBtn');
+const statusEl = document.getElementById('status');
 
-  // ดึงไฟล์ key.json จาก root ของ Pages
-  fetch('./key.json').then(r => r.json()).then(data => {
-    if (!data || !data.key || !data.generated_at) {
-      loadingEl.textContent = 'ไม่พบคีย์วันนี้';
-      return;
-    }
-    const key = data.key.toString().trim();
-    theKeyEl.textContent = key;
-    loadingEl.style.display = 'none';
-    keyWrap.style.display = 'block';
+fetch('key.json').then(r=>r.json()).then(data=>{
+  keyEl.textContent = data.key;
+}).catch(()=>{
+  keyEl.textContent = "Error loading key";
+});
 
-    // คำนวณเวลา expire: generated_at + 24 ชั่วโมง
-    const gen = new Date(data.generated_at);
-    const expires = new Date(gen.getTime() + 24*60*60*1000);
-    function updateCountdown() {
-      const now = new Date();
-      const diff = expires - now;
-      if (diff <= 0) {
-        expiresEl.textContent = 'คีย์หมดอายุแล้ว — กลับมาใหม่พรุ่งนี้';
-        return;
-      }
-      const hrs = Math.floor(diff / (1000*60*60));
-      const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-      const secs = Math.floor((diff % (1000*60)) / 1000);
-      expiresEl.textContent = `หมดอายุภายใน ${hrs} ชั่วโมง ${mins} นาที ${secs} วินาที (UTC)`;
-    }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-
-  }).catch(err => {
-    loadingEl.textContent = 'เกิดข้อผิดพลาดในการโหลดคีย์';
-    console.error(err);
+copyBtn.addEventListener('click', ()=>{
+  navigator.clipboard.writeText(keyEl.textContent).then(()=>{
+    statusEl.textContent = "Copied!";
+    setTimeout(()=>statusEl.textContent="",2000);
   });
-
-  copyBtn.addEventListener('click', () => {
-    const text = theKeyEl.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      statusEl.textContent = 'คัดลอกแล้ว! ไปวางในเกมได้เลย';
-      setTimeout(() => statusEl.textContent = '', 2000);
-    }).catch(() => {
-      statusEl.textContent = 'คัดลอกอัตโนมัติไม่สำเร็จ — เลือกและคัดลอกด้วยมือ';
-    });
-  });
+});
 </script>
 </body>
 </html>
