@@ -23,12 +23,11 @@ const keyEl = document.getElementById('key');
 const copyBtn = document.getElementById('copyBtn');
 const statusEl = document.getElementById('status');
 
-fetch('key.json').then(r=>r.json()).then(data=>{
-  keyEl.textContent = data.key;
-}).catch(()=>{
-  keyEl.textContent = "Error loading key";
-});
-
+fetch('https://<USERNAME>.github.io/<REPO>/key.json')
+  .then(r => r.json())
+  .then(data => { keyEl.textContent = data.key; })
+  .catch(()=>{ keyEl.textContent = "Error loading key"; });
+  
 copyBtn.addEventListener('click', ()=>{
   navigator.clipboard.writeText(keyEl.textContent).then(()=>{
     statusEl.textContent = "Copied!";
