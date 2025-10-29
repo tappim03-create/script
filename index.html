@@ -23,7 +23,7 @@ const keyEl = document.getElementById('key');
 const copyBtn = document.getElementById('copyBtn');
 const statusEl = document.getElementById('status');
 
-fetch('https://github.com/tappim03-create/script/blob/main/key.json')
+fetch('https://github.com/tappim03-create/script/main/key.json')
   .then(r => r.json())
   .then(data => { keyEl.textContent = data.key; })
   .catch(()=>{ keyEl.textContent = "Error loading key"; });
