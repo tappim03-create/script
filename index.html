@@ -2,11 +2,36 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>Get Your Key</title>
+  <title>Get Your Roblox Key</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; text-align: center; }
+    .key-box { font-family: monospace; font-size: 24px; padding: 10px; border: 2px dashed #333; margin: 20px 0; display: inline-block; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+  </style>
 </head>
 <body>
-<h2>Your Roblox Key</h2>
-<p id="key">Jf9!aQ7rT2#xL8vZp3&Nk6$Yb0@Mw1*Hs4^Dc5%Rg9+Ej2~Uv</p>
-<p>Copy this key and paste it into your Roblox game.</p>
+  <h1>Your Roblox Key</h1>
+  <p>Copy the key below and paste it into your Roblox game:</p>
+
+  <div class="key-box" id="key">Jf9!aQ7rT2#xL8vZp3&Nk6$Yb0@Mw1*Hs4^Dc5%Rg9+Ej2~Uv</div>
+  <br>
+  <button id="copyBtn">Copy Key</button>
+  <p id="status" style="color: green;"></p>
+
+  <script>
+    const copyBtn = document.getElementById('copyBtn');
+    const keyEl = document.getElementById('key');
+    const statusEl = document.getElementById('status');
+
+    copyBtn.addEventListener('click', () => {
+      const keyText = keyEl.textContent;
+      navigator.clipboard.writeText(keyText).then(() => {
+        statusEl.textContent = 'Copied to clipboard!';
+        setTimeout(() => statusEl.textContent = '', 2000);
+      }).catch(() => {
+        statusEl.textContent = 'Failed to copy, select manually.';
+      });
+    });
+  </script>
 </body>
 </html>
